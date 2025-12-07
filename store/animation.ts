@@ -9,6 +9,7 @@ export interface State {
 
 interface Store extends State {
   setAnimationData: (payload: Lottie) => void;
+  clearAnimationData: () => void;
   parseAndSetAnimationData: (payload: string) => void;
 }
 
@@ -33,4 +34,9 @@ export const useAnimationStore = create<Store>((set) => ({
       });
     }
   },
+  clearAnimationData: () =>
+    set({
+      animationData: null,
+      error: "",
+    }),
 }));

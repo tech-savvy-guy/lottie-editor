@@ -39,6 +39,6 @@ export default function LottieAnimation({ animationData, onNewAnimation }: Lotti
     onNewAnimation?.(animRef.current);
   }, [animationData, onNewAnimation]);
 
-  return <div ref={animContainerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />;
+  return <div ref={animContainerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '350px', height: '350px' }} />;
 }
 

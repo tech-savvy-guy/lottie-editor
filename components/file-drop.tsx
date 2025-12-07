@@ -1,8 +1,12 @@
 'use client'
 
 import { ungzip } from 'pako';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { useAnimationStore } from '@/store/animation';
+
+const VALID_EXTENSIONS = ['.tgs', '.json', '.lottie'];
 
 export default function FileDrop() {
   const [dragover, setDragover] = useState(false);
@@ -11,8 +15,20 @@ export default function FileDrop() {
 
   const handleFile = (files: FileList | null | undefined) => {
     if (!files?.length) return;
+    
+    const file = files[0];
+    const fileName = file.name.toLowerCase();
+    const isValidType = VALID_EXTENSIONS.some(ext => fileName.endsWith(ext));
+    
+    if (!isValidType) {
+      toast.error('Invalid file type', {
+        description: 'Please select a .tgs, .json, or .lottie file',
+      });
+      return;
+    }
+    
     const reader = new FileReader();
-    reader.readAsBinaryString(files[0]);
+    reader.readAsBinaryString(file);
     reader.addEventListener('load', (e) => onFileLoaded(e));
   };
 
@@ -45,28 +61,33 @@ export default function FileDrop() {
 
   return (
     <div
-      style={{
-        border: '2px dashed #ccc',
-        borderRadius: '8px',
-        padding: '40px',
-        textAlign: 'center',
-        cursor: 'pointer',
-        backgroundColor: dragover ? '#f5f5f5' : 'transparent'
-      }}
+      className={cn(
+        'group border border-dashed transition-colors cursor-pointer bg-card/80 max-w-md mx-auto',
+        dragover && 'border-foreground bg-muted/30'
+      )}
       onDrop={dropFiles}
       onDragOver={(e) => { e.preventDefault(); setDragover(true); }}
       onDragLeave={() => setDragover(false)}
       onClick={() => fileInputRef.current?.click()}
     >
-      <p style={{ fontSize: '18px', marginBottom: '10px' }}>Drop file here or click to select</p>
-      <button style={{ padding: '8px 16px', cursor: 'pointer' }}>Choose File</button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept=".tgs, .json, .lottie"
-        onChange={(e) => handleFile(e.target.files)}
-        style={{ display: 'none' }}
-      />
+      <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+        <p className="text-sm font-medium text-foreground mb-1">
+          Drop file or click to select a file
+        </p>
+        <p className="text-xs text-muted-foreground mb-4">
+          .tgs, .json, .lottie
+        </p>
+        <span className="pointer-events-none inline-flex items-center px-4 py-1.5 text-[11px] font-medium uppercase tracking-widest border backdrop-blur-sm transition-all text-foreground border-foreground/30 bg-foreground/5">
+          Choose File
+        </span>
+        <input
+          type="file"
+          className="hidden"
+          ref={fileInputRef}
+          accept=".tgs, .json, .lottie"
+          onChange={(e) => handleFile(e.target.files)}
+        />
+      </div>
     </div>
   );
 }
