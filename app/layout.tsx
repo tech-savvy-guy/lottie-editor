@@ -42,12 +42,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div
-            className="fixed inset-0 z-0"
-            style={{
-              background: "radial-gradient(125% 125% at 50% 90%, var(--gradient-start) 40%, var(--gradient-end) 100%)",
-            }}
-          />
           <div className="relative z-10">
             {children}
           </div>
