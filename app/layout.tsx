@@ -1,11 +1,31 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Toaster } from '@/components/ui/sonner'
+import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
   title: 'Lottie Converter',
-  description: 'Convert TGS and JSON files',
+  description: 'Convert TGS and Lottie JSON files',
+  openGraph: {
+    title: 'Lottie Converter',
+    description: 'Convert TGS and Lottie JSON files',
+    type: 'website',
+    images: [
+      {
+        url: '/lottie-editor.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lottie Editor',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lottie Converter',
+    description: 'Convert TGS and Lottie JSON files',
+    images: ['/lottie-editor.png'],
+  },
 }
 
 export default function RootLayout({
@@ -24,6 +44,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
